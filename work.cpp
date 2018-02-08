@@ -25,6 +25,7 @@ void input();//输入学生信息
 void all();
 void find();
 void findid();
+void findname();
 void out();
 void charge();
 
@@ -65,10 +66,13 @@ void menu()
 		break;
 	case 3:
 		find();
+		break;
 	case 4:
 		charge();
+		break;
 	case 5:
 		out();
+		break;
 
 	}
 }
@@ -120,7 +124,7 @@ void input()
 
 		write(); //写入文件
 
-
+		printf("写入成功\n");
 
 		printf("是否继续?(y/n)");
 
@@ -160,7 +164,7 @@ void write()
 
 	fclose(fp);
 	i++;
-	menu();
+	return;
 }
 
 
@@ -195,8 +199,10 @@ void all()
 		}while (_findnext(handle, &fileinfo) == 0);
 	}
 
+	printf("按任意键返回菜单\n");
 	getchar();
 	getchar();
+	system("cls");
 	menu();
 
 }
@@ -217,10 +223,8 @@ void find()
 		findid();
 		break;
 	case 2 :
-		printf("迟一点更新(-_-)\n");
-		getchar();
-		getchar();
-		menu();
+		findname();
+		break;
 }
 
 }
@@ -228,21 +232,79 @@ void find()
 void findid()
 {
 	FILE *fp;
+	
 	system("cls");
+	
 	printf("请输入学号 : ");
 	scanf("%s", g);
-		sprintf(s, "E:\\students\\%s.txt", g);
-		if ((fp = fopen(s, "r+")) == NULL)
+	
+	sprintf(s, "E:\\students\\%s.txt", g);
+
+	if ((fp = fopen(s, "r+")) == NULL)
 		{
 			printf("没有这个学生\n");
 			return;
 		}
-		fread(&students[i], sizeof(struct student), 1, fp);
-		printf("学号\t姓名\t性别\t年龄\t专业\n");
-		printf("%d\t%s\t%s\t%d\t%s\t\n", students[i].id, students[i].name, students[i].sex, students[i].age, students[i].major);
-		fclose(fp);
-		return;
+	
+	fread(&students[i], sizeof(struct student), 1, fp);
+
+	printf("学号\t姓名\t性别\t年龄\t专业\n");
+	printf("%d\t%s\t%s\t%d\t%s\t\n", students[i].id, students[i].name, students[i].sex, students[i].age, students[i].major);
+
+	fclose(fp);
+
+	
+
+
 }
+
+
+void findname()
+{
+	FILE *fp;
+	long handle;
+	struct _finddata_t fileinfo;
+	char a[30];
+
+	system("cls");
+
+
+
+	printf("请输入名字\n");
+	scanf("%s", a);
+
+	if ((handle = _findfirst("E:\\students\\*.txt", &fileinfo)) == -1L)
+	{
+		printf("现在还没有学生\n");
+		menu();
+	}
+	else
+	{
+		do
+		{
+			sprintf(s, "E:\\students\\%s", fileinfo.name);
+			if ((fp = fopen(s, "r+")) == NULL)
+			{
+				printf("无法打开文件\n");
+				return;
+			}
+			fread(&students[i], sizeof(struct student), 1, fp);
+			if (strcmp(a, students[i].name) == 0)
+			{
+				printf("学号\t姓名\t性别\t年龄\t专业\n");
+				printf("%d\t%s\t%s\t%d\t%s\t\n", students[i].id, students[i].name, students[i].sex, students[i].age, students[i].major);
+				break;
+			}
+		} while (_findnext(handle, &fileinfo) == 0);
+	}
+
+
+
+
+}
+
+
+
 
 void out()
 {
@@ -333,3 +395,5 @@ void charge()
 	write();
 	menu();
 }
+
+
