@@ -11,7 +11,7 @@ void query();					//查找教师
 void amend(int a);				//修改信息
 void del(int a);				//删除信息
 void sort();					//排序
-
+int checkid(int);				//检查id是否存在
 
 struct Teacher
 {
@@ -79,35 +79,102 @@ void menu()
 	}
 }
 
+//检查教师是否已存在
+int checkid(int newid)
+{
+	int a = 0;
+	FILE *fp;
+	int i = 0, num = 0;
+
+	if ((fp = fopen("E:\\students\\teacher.txt", "r")) == NULL)
+	{
+		printf("cannot open the files\n");
+		system("pause");
+		return 0;
+	}
+
+	while (fscanf(fp, "%d%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%d", &teacher[i].id, teacher[i].name, teacher[i].position, teacher[i].sex, teacher[i].classname1, teacher[i].semester1, teacher[i].nature1, teacher[i].effect1, teacher[i].classname2, teacher[i].semester2, teacher[i].nature2, teacher[i].effect2, teacher[i].classname3, teacher[i].semester3, teacher[i].nature3, teacher[i].effect3, &teacher[i].score) != EOF)
+	{
+		i++;
+		num = num + 1;
+	}
+
+	for (i = 0; i < num; i++)
+	{
+		if (teacher[i].id == newid)
+		{
+			printf("-------------------------------------------------------------------------------------\n");
+
+			printf("\t\t\t工号\t\t姓名\t\t职位\t\t性别\t\t综合评分\n ");
+			printf("\t\t\t%d\t\t%s\t\t%s\t\t%s\t\t%d\n", teacher[i].id, teacher[i].name, teacher[i].position, teacher[i].sex, teacher[i].score);
+			printf("\t\t\t课程名称\t开学学期\t课程性质\t教学效果 \n");
+			printf("\t\t\t%s\t\t%s\t\t%s\t\t%s\n", teacher[i].classname1, teacher[i].semester1, teacher[i].nature1, teacher[i].effect1);
+			printf("\t\t\t%s\t\t%s\t\t%s\t\t%s\n", teacher[i].classname2, teacher[i].semester2, teacher[i].nature2, teacher[i].effect2);
+			printf("\t\t\t%s\t\t%s\t\t%s\t\t%s\n", teacher[i].classname3, teacher[i].semester3, teacher[i].nature3, teacher[i].effect3);
+			printf("-------------------------------------------------------------------------------------\n");
+
+			return 1;
+		}
+	}
+	fclose(fp);
+	return 0;
+}
+
+
+
+
 
 void add()
 {
 	FILE *fp;
+	int choose = 1;
 	int i=0,num=1;
 	char sign = 'y';			//判断继续信号
 	system("cls");
 	Teacher ter[200];
-
 	
 
 	while (sign != 'n'&&sign != 'N')
 	{
 		printf("************************************************添加教师信息*****************************************\n");
-		printf("\t\t\t\t\t\t工号:");
+		
+		printf("\t\t\t\t\t\t工号:");	
 		scanf("%d" , &ter[i].id);
+		while (checkid(*&ter[i].id) == 1)					//检查教师是否已在其中
+		{
+			printf("\t\t\t\t\t\t此教师已经存在\n");
+			printf("\t\t\t1.退出输入\t2.重新输入\n");
+			printf("\t\t\t\t\t请输入你要的服务:");
+			scanf("%d", &choose);
+			if (choose == 2)
+			{
+				printf("\t\t\t\t\t\t工号:");
+				scanf("%d", &ter[i].id);
+			}
+			else
+			{
+				menu();
+				break;
+			}
+		}
+
+
+
 		printf("\t\t\t\t\t\t姓名:");
 		scanf("%s" , ter[i].name);
 		printf("\t\t\t\t\t\t职位:");
 		scanf("%s" , ter[i].position);
 		
 		printf("\t\t\t\t\t\t性别:");
-		scanf("%s" ,ter[i].sex);
+		scanf("%s", ter[i].sex);
 		while (strcmp(ter[i].sex, "男") != 0 && strcmp(ter[i].sex, "女") != 0)
 		{
 			printf("t\t\t\t\t性别只限男女\n");
 			printf("\t\t\t\t\t\t性别:");
 			scanf("%s", ter[i].sex);
 		}
+
+
 		printf("\t\t\t\t\t\t课程名称1:");
 		scanf("%s" , ter[i].classname1);
 		printf("\t\t\t\t\t\t开学学期1:");
