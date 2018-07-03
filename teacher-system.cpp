@@ -83,7 +83,7 @@ void menu()
 void add()
 {
 	FILE *fp;
-	int i=0,num=0;
+	int i=0,num=1;
 	char sign = 'y';			//判断继续信号
 	system("cls");
 	Teacher ter[200];
@@ -141,6 +141,7 @@ void add()
 		{
 			printf("评分只能为0-100\n");
 			printf("\t\t\t\t\t\t综合评分:");
+			system("pause");
 			scanf("%d", &ter[i].score);
 		}
 
@@ -159,13 +160,13 @@ void add()
 		return;                                         
 	}
 
-	for (i = 0; i < num; i++)				//写入文件
+	for (i = 0; i < num; i++)															//写入文件
 	{
 		fprintf(fp, "%d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %d\n", ter[i].id, ter[i].name, ter[i].position, ter[i].sex, ter[i].classname1, ter[i].semester1, ter[i].nature1, ter[i].effect1, ter[i].classname2, ter[i].semester2, ter[i].nature2, ter[i].effect2, ter[i].classname3, ter[i].semester3, ter[i].nature3, ter[i].effect3, ter[i].score);
 	}
 	fclose(fp);
 	printf("\t\t\t\t\t\t写入成功(输入任何返回菜单)");
-	getchar();
+	system("pause");
 	menu();
 }
 
